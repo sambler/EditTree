@@ -25,6 +25,24 @@ EditTreeSample_ttkbootstrap
 ```
 
 ---
+Use in your project
+===================
+
+The `EditTree` inherits `ttk.Treeview` and should be a straight replacement for it.
+
+Install module, and add
+```python
+from edit_tree import EditTree
+```
+then change `ttk.Treeview` to `EditTree`
+
+OR if your using ttkbootstrap, add
+```python
+from edit_tree.tableview import EditTree
+```
+and change `ttk.tableview.Tableview` to `EditTree`
+
+---
 
 Known issues
 ============
