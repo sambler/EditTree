@@ -54,18 +54,18 @@ class InplaceEntry(ttk.Entry):
         self.bind('<Tab>', self.accept_edit)
         self.bind('<FocusOut>', self.accept_edit)
         if sys.platform.startswith('osx') or sys.platform.startswith('win'):
-            self.funcid1 = self.bind_all('<MouseWheel>', self.scrolled, '+')
+            self.funcid1 = self.bind_all('<MouseWheel>', self.accept_edit, '+')
         else:
-            self.funcid1 = self.bind_all('<Button-4>', self.scrolled, '+')
-            self.funcid2 = self.bind_all('<Button-5>', self.scrolled, '+')
+            self.funcid1 = self.bind_all('<Button-4>', self.accept_edit, '+')
+            self.funcid2 = self.bind_all('<Button-5>', self.accept_edit, '+')
         self.bind('<Control-a>', self.select_all)
-        self.bind('<Escape>', lambda e: self.destroy())
+        self.bind('<Escape>', self.cancel_edit)
 
     def select_all(self, evnt=None):
         self.selection_range(0, tk.END)
         return 'break'
 
-    def scrolled(self, evnt=None, *extras):
+    def clear_scroll_binding(self):
         # how can we store a bind_all funcid and only
         # unbind the bindings that we added??
         if sys.platform.startswith('osx') or sys.platform.startswith('win'):
@@ -73,9 +73,13 @@ class InplaceEntry(ttk.Entry):
         else:
             self.unbind_all('<Button-4>')
             self.unbind_all('<Button-5>')
-        self.accept_edit(evnt)
+
+    def cancel_edit(self, evnt=None):
+        self.clear_scroll_binding()
+        self.destroy()
 
     def accept_edit(self, evnt=None):
+        self.clear_scroll_binding()
         values = self.edit_tree.item(self.rowid, 'values')
         values = list(values)
         values[self.colid] = self.get()
