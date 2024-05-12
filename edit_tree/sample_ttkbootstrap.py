@@ -35,10 +35,10 @@ import screeninfo
 import sys
 import tkinter as tk
 import ttkbootstrap as ttk
-from ttkbootstrap.tableview import Tableview
 from tkinter.messagebox import showinfo
 
 from . import __version__ as vers
+from . import tableview as tv
 
 PADDING = 3
 BORDER = 5
@@ -82,7 +82,7 @@ class EditTreeSampleTTKB(ttk.Window):
         row_data = []
         for r in range(1, 101):
             row_data.append((f'cell-{r}-1', f'cell-{r}-2', f'cell-{r}-3', f'cell-{r}-4'))
-        t = Tableview(  self,
+        t = tv.EditTree(self,
                         coldata=col_names,
                         rowdata=row_data,
                         stripecolor=('#373737', None))

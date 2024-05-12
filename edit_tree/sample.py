@@ -38,6 +38,7 @@ from tkinter import ttk
 from tkinter.messagebox import showinfo
 
 from . import __version__ as vers
+from . import EditTree
 
 PADDING = 3
 BORDER = 5
@@ -77,7 +78,7 @@ class EditTreeSample(tk.Tk):
         row_data = []
         for r in range(1, 101):
             row_data.append((f'cell-{r}-1', f'cell-{r}-2', f'cell-{r}-3', f'cell-{r}-4'))
-        t = ttk.Treeview(self, columns=col_names, show='headings')
+        t = EditTree(self, columns=col_names, show='headings')
         for i,c in enumerate(col_names):
             t.heading(c, text=c)
             t.column(i, width=10)

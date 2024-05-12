@@ -1,4 +1,4 @@
-# __init__.py
+# tableview.py
 #
 #  Copyright (c)2024 Shane Ambler <Develop@ShaneWare.biz>
 #
@@ -31,14 +31,15 @@
 
 
 import tkinter as tk
-from tkinter import ttk
+import ttkbootstrap as ttk
+from ttkbootstrap.tableview import Tableview
 
 from . import __version__ as vers
 
-class EditTree(ttk.Treeview):
+class EditTree(Tableview):
     def __init__(self, par, **kwargs):
         super().__init__(par, **kwargs)
-        self.bind('<Double-1>', self.click)
+        self.view.bind('<Double-1>', self.click)
 
     def click(self, evnt=None):
         print(evnt)
