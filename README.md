@@ -29,6 +29,6 @@ EditTreeSample_ttkbootstrap
 Known issues
 ============
 
-When scrolling the underlying Treeview, destroying the entry widget is not always handled.
+* When scrolling the underlying Treeview, destroying the entry widget is not always handled.
 
-The unbind_all used to remove the scrollwheel binding can also remove bindings added elsewhere.
+* The unbind_all used to remove the scrollwheel binding can also remove bindings added elsewhere.
