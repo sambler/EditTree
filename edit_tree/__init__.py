@@ -43,6 +43,7 @@ class InplaceEntry(ttk.Entry):
         self.edit_tree = et
         self.rowid = rowid
         self.colid = colid
+        self.start_txt = txt
 
         self.insert(0, txt)
         self['exportselection'] = False
@@ -83,7 +84,9 @@ class InplaceEntry(ttk.Entry):
         values = self.edit_tree.item(self.rowid, 'values')
         values = list(values)
         values[self.colid] = self.get()
-        self.edit_tree.item(self.rowid, values=values)
+        if self.start_txt != values[self.colid]:
+            self.edit_tree.item(self.rowid, values=values)
+            self.event_generate('<<ET_Accept>>')
         self.destroy()
 
 
@@ -101,11 +104,17 @@ class EditTree(ttk.Treeview):
         rowid = self.identify_row(evnt.y)
         if rowid == '': return
         colid = self.identify_column(evnt.x)
+        self.last_edit_cell = (int(rowid[1:], base=16)-1, int(colid[1:])-1)
 
         x, y, w, h = self.bbox(rowid, colid)
         pady = (h // 2) + h
 
         txt = self.item(rowid, 'values')[int(colid[1:])-1]
+        self.last_edit_start = txt
         self.edit_entry = InplaceEntry(self.master, self, rowid, int(colid[1:])-1, txt)
         self.edit_entry.place(x=x, y=y+pady, width=w, height=h, anchor=tk.W)
+        self.edit_entry.bind('<<ET_Accept>>', self.end_edit)
 
+    def end_edit(self, evnt=None):
+        self.last_edit_end = evnt.widget.get()
+        self.event_generate('<<ET_Accept>>')
