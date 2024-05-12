@@ -30,15 +30,78 @@
 #
 
 
+import sys
 import tkinter as tk
 from tkinter import ttk
 
 from . import __version__ as vers
 
-class EditTree(ttk.Treeview):
-    def __init__(self, par, **kwargs):
-        super().__init__(par, **kwargs)
-        self.bind('<Double-1>', self.click)
 
-    def click(self, evnt=None):
-        print(evnt)
+class InplaceEntry(ttk.Entry):
+    def __init__(self, parent, et, rowid, colid, txt, **kwargs):
+        super().__init__(parent, **kwargs)
+        self.edit_tree = et
+        self.rowid = rowid
+        self.colid = colid
+
+        self.insert(0, txt)
+        self['exportselection'] = False
+
+        self.focus_force()
+        self.select_all()
+        self.bind('<Return>', self.accept_edit)
+        self.bind('<KP_Enter>', self.accept_edit)
+        self.bind('<Tab>', self.accept_edit)
+        self.bind('<FocusOut>', self.accept_edit)
+        if sys.platform.startswith('osx') or sys.platform.startswith('win'):
+            self.funcid1 = self.bind_all('<MouseWheel>', self.scrolled, '+')
+        else:
+            self.funcid1 = self.bind_all('<Button-4>', self.scrolled, '+')
+            self.funcid2 = self.bind_all('<Button-5>', self.scrolled, '+')
+        self.bind('<Control-a>', self.select_all)
+        self.bind('<Escape>', lambda e: self.destroy())
+
+    def select_all(self, evnt=None):
+        self.selection_range(0, tk.END)
+        return 'break'
+
+    def scrolled(self, evnt=None, *extras):
+        # how can we store a bind_all funcid and only
+        # unbind the bindings that we added??
+        if sys.platform.startswith('osx') or sys.platform.startswith('win'):
+            self.unbind_all('<MouseWheel>')
+        else:
+            self.unbind_all('<Button-4>')
+            self.unbind_all('<Button-5>')
+        self.accept_edit(evnt)
+
+    def accept_edit(self, evnt=None):
+        values = self.edit_tree.item(self.rowid, 'values')
+        values = list(values)
+        values[self.colid] = self.get()
+        self.edit_tree.item(self.rowid, values=values)
+        self.destroy()
+
+
+class EditTree(ttk.Treeview):
+    def __init__(self, parent, **kwargs):
+        super().__init__(parent, **kwargs)
+        self.bind('<Double-1>', self.start_edit)
+
+    def start_edit(self, evnt=None):
+        try:
+            self.edit_entry.destroy()
+        except AttributeError:
+            pass
+
+        rowid = self.identify_row(evnt.y)
+        if rowid == '': return
+        colid = self.identify_column(evnt.x)
+
+        x, y, w, h = self.bbox(rowid, colid)
+        pady = (h // 2) + h
+
+        txt = self.item(rowid, 'values')[int(colid[1:])-1]
+        self.edit_entry = InplaceEntry(self.master, self, rowid, int(colid[1:])-1, txt)
+        self.edit_entry.place(x=x, y=y+pady, width=w, height=h, anchor=tk.W)
+

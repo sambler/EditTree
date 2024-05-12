@@ -35,11 +35,28 @@ import ttkbootstrap as ttk
 from ttkbootstrap.tableview import Tableview
 
 from . import __version__ as vers
+from . import InplaceEntry
+
 
 class EditTree(Tableview):
-    def __init__(self, par, **kwargs):
-        super().__init__(par, **kwargs)
-        self.view.bind('<Double-1>', self.click)
+    def __init__(self, parent, **kwargs):
+        super().__init__(parent, **kwargs)
+        self.view.bind('<Double-1>', self.start_edit)
 
-    def click(self, evnt=None):
-        print(evnt)
+    def start_edit(self, evnt=None):
+        try:
+            self.edit_entry.destroy()
+        except AttributeError:
+            pass
+
+        self.view.update()
+        rowid = self.view.identify_row(evnt.y)
+        if rowid == '': return
+        colid = self.view.identify_column(evnt.x)
+
+        x, y, w, h = self.view.bbox(rowid, colid)
+        pady = (h // 2)
+
+        txt = self.view.item(rowid, 'values')[int(colid[1:])-1]
+        self.edit_entry = InplaceEntry(self, self.view, rowid, int(colid[1:])-1, txt)
+        self.edit_entry.place(x=x, y=y+pady, width=w, height=h*1.75, anchor=tk.W)
