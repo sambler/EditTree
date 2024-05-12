@@ -1,4 +1,4 @@
-#  gui.py
+#  sample.py
 #
 #  Copyright (c)2024 Shane Ambler <Develop@ShaneWare.biz>
 #

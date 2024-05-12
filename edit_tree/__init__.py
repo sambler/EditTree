@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+# __init__.py
 #
 #  Copyright (c)2024 Shane Ambler <Develop@ShaneWare.biz>
 #
