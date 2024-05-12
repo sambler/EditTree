@@ -87,6 +87,7 @@ class EditTreeSampleTTKB(ttk.Window):
                         rowdata=row_data,
                         stripecolor=('#373737', None))
         t.grid(row=1, column=0, sticky=tk.NSEW)
+        t.bind('<<ET_Accept>>', self.data_edited)
 
         s = ttk.Scrollbar(self, orient=tk.VERTICAL, command=t.view.yview)
         t.view.configure(yscroll=s.set)
@@ -94,6 +95,9 @@ class EditTreeSampleTTKB(ttk.Window):
 
         self.rowconfigure(1, weight=1)
         self.columnconfigure(0, weight=1)
+
+    def data_edited(self, evnt):
+        print(f'Cell: {evnt.widget.last_edit_cell} changed from {evnt.widget.last_edit_start} to {evnt.widget.last_edit_end}')
 
     def mouse_on_monitor(self):
         xy = self.winfo_pointerxy()
