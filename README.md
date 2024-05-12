@@ -42,8 +42,20 @@ from edit_tree.tableview import EditTree
 ```
 and change `ttk.tableview.Tableview` to `EditTree`
 
----
 
+Bind to event `<<ET_Accept>>` to respond to data changes.
+```
+table.bind('<<ET_Accept>>', data_edited)
+```
+
+Values available from event parameter:-
+```
+event.widget.last_edit_cell # data index (row, col)
+evnt.widget.last_edit_start # cell value at begin edit
+evnt.widget.last_edit_end   # cell value at accept edit
+```
+
+---
 Known issues
 ============
 
