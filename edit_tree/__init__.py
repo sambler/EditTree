@@ -107,12 +107,12 @@ class EditTree(ttk.Treeview):
         self.last_edit_cell = (int(rowid[1:], base=16)-1, int(colid[1:])-1)
 
         x, y, w, h = self.bbox(rowid, colid)
-        pady = (h // 2) + h
+        pady = (h // 2)
 
         txt = self.item(rowid, 'values')[int(colid[1:])-1]
         self.last_edit_start = txt
         self.edit_entry = InplaceEntry(self.master, self, rowid, int(colid[1:])-1, txt)
-        self.edit_entry.place(x=x, y=y+pady, width=w, height=h, anchor=tk.W)
+        self.edit_entry.place(in_=self, x=x, y=y+pady, width=w, height=h, anchor=tk.W)
         self.edit_entry.bind('<<ET_Accept>>', self.end_edit)
 
     def end_edit(self, evnt=None):
