@@ -1,4 +1,4 @@
-#  sample.py
+#  example_ttkbootstrap.py
 #
 #  Copyright (c)2024 Shane Ambler <Develop@ShaneWare.biz>
 #
@@ -31,28 +31,27 @@
 #
 
 
+from edit_tree.tableview import EditTree
+from edit_tree import vers
 import screeninfo
 import sys
 import tkinter as tk
-from tkinter import ttk
+import ttkbootstrap as ttk
 from tkinter.messagebox import showinfo
-
-from . import __version__ as vers
-from . import EditTree
 
 PADDING = 3
 BORDER = 5
 
 
-class EditTreeSample(tk.Tk):
-    def __init__(self):
-        super().__init__()
+class EditTreeSampleTTKB(ttk.Window):
+    def __init__(self, show_search=False, **kwargs):
+        super().__init__(**kwargs)
         self.title('EditTree Sample')
         self.geometry(self.center_on_monitor(500, 600))
         self.minsize(450, 200)
         self.setupMenus()
         self.bind('<Control-KeyPress-q>', lambda e: self.destroy())
-        self.layout()
+        self.layout(show_search)
 
     def setupMenus(self):
         self.mainmenu = tk.Menu(self)
@@ -70,25 +69,28 @@ class EditTreeSample(tk.Tk):
 
         self.config(menu=self.mainmenu)
 
-    def layout(self):
-        l = ttk.Label(self, text='Base: tkinter.Treeview')
+    def layout(self, show_search=False):
+        l = ttk.Label(self, text='Base: ttkbootstrap.tableview.Tableview')
         l.grid(row=0, column=0, sticky=tk.W, padx=PADDING, pady=PADDING)
 
-        col_names = ['col1', 'col2', 'col3', 'col4']
+        col_names = [{'text': 'col1', 'width': 121},
+                    {'text': 'col2', 'width': 121},
+                    {'text': 'col3', 'width': 121},
+                    {'text': 'col4', 'width': 121},
+                    ]
         row_data = []
         for r in range(1, 101):
             row_data.append((f'cell-{r}-1', f'cell-{r}-2', f'cell-{r}-3', f'cell-{r}-4'))
-        t = EditTree(self, columns=col_names, show='headings')
-        for i,c in enumerate(col_names):
-            t.heading(c, text=c)
-            t.column(i, width=10)
-        for r in row_data:
-            t.insert('', tk.END, values=r)
+        t = EditTree(self,
+                        coldata=col_names,
+                        rowdata=row_data,
+                        searchable=show_search,
+                        stripecolor=('#373737', None))
         t.grid(row=1, column=0, sticky=tk.NSEW)
         t.bind('<<ET_Accept>>', self.data_edited)
 
-        s = ttk.Scrollbar(self, orient=tk.VERTICAL, command=t.yview)
-        t.configure(yscroll=s.set)
+        s = ttk.Scrollbar(self, orient=tk.VERTICAL, command=t.view.yview)
+        t.view.configure(yscroll=s.set)
         s.grid(row=1, column=1, sticky=tk.NS)
 
         self.rowconfigure(1, weight=1)
@@ -119,14 +121,14 @@ class EditTreeSample(tk.Tk):
         return f'{w}x{h}+{xpos}+{ypos}'
 
     def about_me(self):
-        showinfo('About EditTree sample v'+vers.__version__, message='Example project to showcase the EditTree widget.')
+        showinfo('About EditTree sample v'+vers.__version__, message='Example project to showcase the EditTree widget using ttkbootstrap.')
 
     def main(self, args=None):
         return self.mainloop()
 
 
 def main():
-    mw = EditTreeSample()
+    mw = EditTreeSampleTTKB(show_search=('-s' in sys.argv), themename='darkly')
     sys.exit(mw.main(sys.argv))
 
 if __name__ == '__main__':

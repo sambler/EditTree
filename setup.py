@@ -41,8 +41,8 @@ EXTRAS = {
 EXT_MODULES = [] #cythonize('module/*.py')
 
 ENTRY_POINTS = {
-    'console_scripts': ['EditTreeSample = edit_tree.sample:main',
-                        'EditTreeSample_ttkbootstrap = edit_tree.sample_ttkbootstrap:main',],
+#    'console_scripts': ['EditTreeSample = edit_tree.sample:main',
+#                        'EditTreeSample_ttkbootstrap = edit_tree.sample_ttkbootstrap:main',],
 }
 
 # The rest you shouldn't have to touch too much :)
