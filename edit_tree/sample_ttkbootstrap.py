@@ -45,14 +45,14 @@ BORDER = 5
 
 
 class EditTreeSampleTTKB(ttk.Window):
-    def __init__(self, **kwargs):
+    def __init__(self, show_search=False, **kwargs):
         super().__init__(**kwargs)
         self.title('EditTree Sample')
         self.geometry(self.center_on_monitor(500, 600))
         self.minsize(450, 200)
         self.setupMenus()
         self.bind('<Control-KeyPress-q>', lambda e: self.destroy())
-        self.layout()
+        self.layout(show_search)
 
     def setupMenus(self):
         self.mainmenu = tk.Menu(self)
@@ -70,7 +70,7 @@ class EditTreeSampleTTKB(ttk.Window):
 
         self.config(menu=self.mainmenu)
 
-    def layout(self):
+    def layout(self, show_search=False):
         l = ttk.Label(self, text='Base: ttkbootstrap.tableview.Tableview')
         l.grid(row=0, column=0, sticky=tk.W, padx=PADDING, pady=PADDING)
 
@@ -85,6 +85,7 @@ class EditTreeSampleTTKB(ttk.Window):
         t = tv.EditTree(self,
                         coldata=col_names,
                         rowdata=row_data,
+                        searchable=show_search,
                         stripecolor=('#373737', None))
         t.grid(row=1, column=0, sticky=tk.NSEW)
         t.bind('<<ET_Accept>>', self.data_edited)
@@ -128,7 +129,7 @@ class EditTreeSampleTTKB(ttk.Window):
 
 
 def main():
-    mw = EditTreeSampleTTKB(themename='darkly')
+    mw = EditTreeSampleTTKB(show_search=('-s' in sys.argv), themename='darkly')
     sys.exit(mw.main(sys.argv))
 
 if __name__ == '__main__':
