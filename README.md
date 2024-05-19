@@ -15,15 +15,6 @@ install as editable module
 python -m pip install --user -e .
 ```
 
-Run examples after install
-```sh
-EditTreeSample
-```
-or
-```sh
-EditTreeSample_ttkbootstrap
-```
-
 ---
 Use in your project
 ===================
