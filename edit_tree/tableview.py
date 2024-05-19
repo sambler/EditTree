@@ -61,7 +61,7 @@ class EditTree(Tableview):
         txt = self.view.item(rowid, 'values')[int(colid[1:])-1]
         self.last_edit_start = txt
         self.edit_entry = InplaceEntry(self, self.view, rowid, int(colid[1:])-1, txt)
-        self.edit_entry.place(x=x, y=y+pady, width=w, height=h*1.75, anchor=tk.W)
+        self.edit_entry.place(in_=self.view, x=x, y=y-pady, width=w, height=h*1.75)
         self.edit_entry.bind('<<ET_Accept>>', self.end_edit)
 
     def end_edit(self, evnt=None):
