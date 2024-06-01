@@ -1,6 +1,6 @@
 
-EditTable
-=========
+EditTree
+========
 
 
 A tkinter treeview that has cells that can be edited in place.
